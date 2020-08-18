@@ -1,0 +1,6 @@
+*.ipynb
+*.json
+__pycache__/
+.inpynb_checkpoints/
+.vscode/
+___test/
