@@ -3,77 +3,73 @@ import json
 import uuid
 
 
-class o365Endpoint:
+class O365Endpoint:
     
-    def __init__(self,o365Instance):
+    def __init__(self, instance):
         self.sUUID = str(uuid.uuid4())
-        self.instanceListURL = 'https://endpoints.office.com/version?ClientRequestId=' + self.sUUID
-        self.o365Instance = o365Instance
+        self.instanceListURL = 'https://endpoints.office.com/version?ClientRequestId={}'.format(self.sUUID)
+        self.instance = instance
         r = requests.get(self.instanceListURL)
-        if (r.status_code == 200):
-            o365InstanceDetails = json.loads(r.content.decode(r.encoding).replace("'",'"'))
-            if next((item for item in o365InstanceDetails if item.get("instance") and item["instance"] == o365Instance), None) == None:
+        if r.status_code == 200:
+            o365instancedetails = json.loads(r.content.decode(r.encoding).replace("'", '"'))
+            if next((item for item in o365instancedetails if item.get("instance") and item["instance"] == instance)
+                    , None) is None:
                 self.instanceNames = []
-                for instance in o365InstanceDetails:
+                for instance in o365instancedetails:
                     for k, v in instance.items():
-                        if (k == "instance"):
+                        if k == "instance":
                             self.instanceNames.append(v)
-                raise ValueError("FAILED: Valid instances are " + ', '.join(self.instanceNames) +".")
+                raise ValueError("FAILED: Valid instances are " + ', '.join(self.instanceNames) + ".")
             else:
-                self.endpointsURL = 'https://endpoints.office.com/endpoints/' + self.o365Instance + '?clientrequestid=' + self.sUUID
-                self.updateJSON()
+                self.endpointsURL = 'https://endpoints.office.com/endpoints/{}?clientrequestid={}'.format(self.instance
+                                                                                                          , self.sUUID)
+                self.updatejson()
         else:
             print("Something went wrong")
 
-        
-    def listInstances(self):
+    def listinstances(self):
         r = requests.get(self.instanceListURL)
-        if (r.status_code == 200):
-            o365InstanceDetails = json.loads(r.content.decode(r.encoding).replace("'",'"'))
+        if r.status_code == 200:
+            o365instancedetails = json.loads(r.content.decode(r.encoding).replace("'", '"'))
             self.instanceNames = []
-            for instance in o365InstanceDetails:
+            for instance in o365instancedetails:
                 for k, v in instance.items():
-                    if (k == "instance"):
+                    if k == "instance":
                         self.instanceNames.append(v)
             return self.instanceNames
         else:
             print("Something went wrong")
 
-    def changeInstance(self, newInstance):
+    def changeinstance(self, newinstance):
         r = requests.get(self.instanceListURL)
-        if (r.status_code == 200):
-            o365InstanceDetails = json.loads(r.content.decode(r.encoding).replace("'",'"'))
-            if next((item for item in o365InstanceDetails if item.get("instance") and item["instance"] == newInstance), None) == None:
+        if r.status_code == 200:
+            o365instancedetails = json.loads(r.content.decode(r.encoding).replace("'", '"'))
+            if next((item for item in o365instancedetails if item.get("instance") and item["instance"] == newInstance)
+                    , None) is None:
                 self.instanceNames = []
-                for instance in o365InstanceDetails:
+                for instance in o365instancedetails:
                     for k, v in instance.items():
-                        if (k == "instance"):
+                        if k == "instance":
                             instanceNames.append(v)
-                raise ValueError("FAILED: Valid instances are " + ', '.join(self.instanceNames) +".")
+                raise ValueError("FAILED: Valid instances are " + ', '.join(self.instanceNames) + ".")
             else:
-                self.o365Instance = newInstance
-                self.endpointsURL = 'https://endpoints.office.com/endpoints/' + self.o365Instance + '?clientrequestid=' + self.sUUID
+                self.instance = newinstance
+                self.endpointsURL = 'https://endpoints.office.com/endpoints/{}?clientrequestid={}'.format(self.instance
+                                                                                                          , self.sUUID)
                 self.updateJSON()
         else:
             print("Something went wrong")
 
-    def updateJSON(self):
-        print(self.endpointsURL)
-        print(self.instanceListURL)
+    def updatejson(self):
         r = requests.get(self.endpointsURL)
-        if (r.status_code == 200):
-            self.o365InstanceEndpoints = json.loads(r.content.decode(r.encoding).replace("'",'"'))
+        if r.status_code == 200:
+            self.rawjson = json.loads(r.content.decode(r.encoding).replace("'", '"'))
         else:
             print("Something went wrong")
 
-# updateJSON()
 
-#print("before __name__ guard")
 if __name__ == '__main__':
-    #print("Name was __main__")
-    o365 = o365Endpoint('Worldwide')
-    print(o365.o365Instance)
-    #print(o365.o365InstanceEndpoints)
-    o365.listInstances()
-
-#print("after __name__ guard")
+    o365 = O365Endpoint('Worldwide')
+    print(o365.instance)
+    o365.listinstances()
+    print(o365.rawjson)
