@@ -11,11 +11,12 @@ import uuid
 
 
 class O365Endpoint:
-    
+
     def __init__(self, instance):
         self.sUUID = str(uuid.uuid4())
         self.instanceListURL = 'https://endpoints.office.com/version?ClientRequestId={}'.format(self.sUUID)
         self.instance = instance
+        self.raw_json = ""
         r = requests.get(self.instanceListURL)
         if r.status_code == 200:
             m_365_instance_details = json.loads(r.content.decode(r.encoding).replace("'", '"'))
@@ -51,8 +52,7 @@ class O365Endpoint:
         r = requests.get(self.instanceListURL)
         if r.status_code == 200:
             m_365_instance_details = json.loads(r.content.decode(r.encoding).replace("'", '"'))
-            if next((item for item in m_365_instance_details if item.get("instance") and item["instance"] == new_instance)
-                    , None) is None:
+            if next((item for item in m_365_instance_details if item.get("instance") and item["instance"] == new_instance), None) is None:
                 self.instance_names = []
                 for instance in m_365_instance_details:
                     for k, v in instance.items():
@@ -70,7 +70,7 @@ class O365Endpoint:
     def update_json(self):
         r = requests.get(self.endpointsURL)
         if r.status_code == 200:
-            self.rawjson = json.loads(r.content.decode(r.encoding).replace("'", '"'))
+            self.raw_json = json.loads(r.content.decode(r.encoding).replace("'", '"'))
         else:
             print("Something went wrong")
 
@@ -79,4 +79,4 @@ if __name__ == '__main__':
     o365 = O365Endpoint('Worldwide')
     print(o365.instance)
     o365.list_instances()
-    print(o365.rawjson)
+    print(o365.raw_json)
