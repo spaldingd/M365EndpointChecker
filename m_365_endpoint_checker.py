@@ -14,7 +14,7 @@ class O365Endpoint:
 
     def __init__(self, instance):
         self.sUUID = str(uuid.uuid4())
-        self.instanceListURL = 'https://endpoints.office.com/version?ClientRequestId={}'.format(self.sUUID)
+        self.instanceListURL = f"https://endpoints.office.com/version?ClientRequestId={self.sUUID}"
         self.instance = instance
         self.raw_json = ""
         r = requests.get(self.instanceListURL)
@@ -76,7 +76,7 @@ class O365Endpoint:
 
 
 if __name__ == '__main__':
-    o365 = O365Endpoint('Worldwide')
-    print(o365.instance)
-    o365.list_instances()
-    print(o365.raw_json)
+    m_365 = O365Endpoint('Worldwide')
+    print(f"M365 selected instance: {m_365.instance}")
+    print(f"M365 instance list: {m_365.list_instances()}")
+    print(f"raw_json {m_365.raw_json}")
