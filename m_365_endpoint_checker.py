@@ -1,3 +1,10 @@
+#! /user/bin/env python
+"""
+A module to help identifying Microsoft 365 endpoints utilising the endpoints JSON file provided by Microsoft.
+
+https://docs.microsoft.com/en-us/microsoft-365/enterprise/microsoft-365-endpoints?view=o365-worldwide
+"""
+
 import requests
 import json
 import uuid

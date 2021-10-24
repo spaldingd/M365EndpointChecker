@@ -1,1 +1,0 @@
-from o365EndpointChecker import *
