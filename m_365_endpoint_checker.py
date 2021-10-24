@@ -29,8 +29,8 @@ class O365Endpoint:
                             self.instance_names.append(v)
                 raise ValueError("FAILED: Valid instances are " + ', '.join(self.instance_names) + ".")
             else:
-                self.endpointsURL = 'https://endpoints.office.com/endpoints/{}?clientrequestid={}'.format(self.instance
-                                                                                                          , self.sUUID)
+                self.endpointsURL = f"https://endpoints.office.com/endpoints/{self.instance}?" \
+                                    f"clientrequestid={self.sUUID} "
                 self.update_json()
         else:
             print("Something went wrong")
