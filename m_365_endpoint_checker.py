@@ -52,7 +52,8 @@ class O365Endpoint:
         r = requests.get(self.instanceListURL)
         if r.status_code == 200:
             m_365_instance_details = json.loads(r.content.decode(r.encoding).replace("'", '"'))
-            if next((item for item in m_365_instance_details if item.get("instance") and item["instance"] == new_instance), None) is None:
+            if next((item for item in m_365_instance_details if item.get("instance") and
+                    item["instance"] == new_instance), None) is None:
                 self.instance_names = []
                 for instance in m_365_instance_details:
                     for k, v in instance.items():
